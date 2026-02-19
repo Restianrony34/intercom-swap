@@ -1,5 +1,12 @@
 # 🔗 TRAC SWAP
 
+![INTERCOM Preview](assets/swaptest1.png)
+
+![INTERCOM Preview](assets/swaptest2.png)
+
+![INTERCOM Preview](assets/swaptest3.png)
+
+
 **MY TRAC ADDRESS WALLET :**  
 `trac19pc3kuakls46emtnu8amc4hazh826wav3zya9ffjeyvqg3jmdt9ql89dcy`
 
