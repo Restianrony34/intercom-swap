@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TRAC Swap</title>
+
+<style>
+
+/* Background */
+body{
+  margin:0;
+  font-family: Inter, Arial;
+  background: radial-gradient(circle at top,#1e1b4b,#020617);
+  color:white;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* Top bar */
+.topbar{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:70px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 30px;
+  background:rgba(2,6,23,.6);
+  backdrop-filter:blur(12px);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:bold;
+}
+
+.logo img{
+  width:38px;
+}
+
+.connect{
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  padding:10px 18px;
+  border:none;
+  border-radius:999px;
+  color:white;
+  font-weight:600;
+}
+
+/* Card */
+.card{
+  width:420px;
+  background:rgba(17,24,39,.9);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+
+/* Header */
+.header{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+
+/* Settings */
+.settings{
+  display:none;
+  background:#020617;
+  padding:12px;
+  border-radius:14px;
+  margin-bottom:12px;
+  font-size:13px;
+}
+
+/* Swap boxes */
+.box{
+  background:#020617;
+  padding:16px;
+  border-radius:16px;
+  margin-bottom:12px;
+}
+
+input{
+  width:100%;
+  background:transparent;
+  border:none;
+  color:white;
+  font-size:22px;
+  margin-top:6px;
+  outline:none;
+}
+
+/* Token pill */
+.token{
+  background:#111827;
+  padding:6px 12px;
+  border-radius:999px;
+  display:inline-block;
+  margin-top:8px;
+  font-size:14px;
+}
+
+/* Arrow */
+.arrow{
+  text-align:center;
+  font-size:20px;
+  margin:8px 0;
+  opacity:.7;
+}
+
+/* Button */
+.swap-btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  color:white;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+}
+
+/* Status */
+.status{
+  margin-top:12px;
+  font-size:13px;
+  text-align:center;
+  opacity:.85;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="logo">
+    <img src="logo.png"/>
+    TRAC Swap
+  </div>
+  <button class="connect">Connect Wallet</button>
+</div>
+
+<!-- Swap Card -->
+<div class="card">
+
+  <div class="header">
+    <b>Swap</b>
+    <span onclick="toggleSettings()" style="cursor:pointer;">⚙️</span>
+  </div>
+
+  <!-- Settings -->
+  <div id="settingsBox" class="settings">
+    Slippage (%)
+    <input id="slippageInput" type="number" value="0.5" step="0.1"/>
+  </div>
+
+  <!-- From -->
+  <div class="box">
+    <div>From</div>
+    <input id="amountInput" type="number" placeholder="0.0"/>
+    <div class="token">TRAC</div>
+  </div>
+
+  <!-- Arrow -->
+  <div class="arrow">⇅</div>
+
+  <!-- To -->
+  <div class="box">
+    <div>To</div>
+    <input id="outputInput" type="number" placeholder="0.0" disabled/>
+
+    <div class="token">USDT</div>
+  </div>
+
+  <!-- Button -->
+  <button class="swap-btn" onclick="startSwap()">
+    Swap
+  </button>
+
+  <!-- Status -->
+  <div id="status" class="status">
+    Idle
+  </div>
+
+</div>
+
+<script>
+
+// Toggle settings
+function toggleSettings(){
+  const box=document.getElementById("settingsBox");
+  box.style.display=
+    box.style.display==="none"?"block":"none";
+}
+// ===== LIVE ESTIMATE =====
+
+const RATE = 0.206; // 1 TRAC = 0.206 USDT
+
+document
+  .getElementById("amountInput")
+  .addEventListener("input", estimateOutput);
+
+function estimateOutput(){
+
+  const amount =
+    document.getElementById("amountInput").value;
+
+  const outputBox =
+    document.getElementById("outputInput");
+
+  if(!amount || amount <= 0){
+    outputBox.value = "";
+    return;
+  }
+
+  const estimate = amount * RATE;
+
+  outputBox.value = estimate.toFixed(4);
+}
+
+// Swap call
+async function startSwap(){
+
+  const amount=
+    document.getElementById("amountInput").value;
+
+  const slippage=
+    document.getElementById("slippageInput").value;
+
+  const status=
+    document.getElementById("status");
+
+  if(!amount||amount<=0){
+    status.innerHTML="⚠️ Enter TRAC amount";
+    return;
+  }
+
+  status.innerHTML="⏳ Sending swap request...";
+
+  try{
+
+    const res=await fetch("/swap",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        amount,slippage
+      })
+    });
+
+    const data=await res.json();
+
+    status.innerHTML=`
+      ✅ Swap Completed<br>
+      Output: ${data.output} USDT<br>
+      Min Received: ${data.minReceived}<br>
+      Tx: ${data.txHash}
+    `;
+
+  }catch(err){
+    status.innerHTML="❌ Server error";
+  }
+}
+
+</script>
+
+</body>
+</html>

@@ -12,13 +12,15 @@
     "type": "terminal"
   },
   "dependencies": {
-    "@solana/spl-token": "^0.4.14",
+    "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.98.4",
     "b4a": "^1.6.7",
     "bare-ws": "2.0.3",
     "bech32": "^2.0.0",
     "compact-encoding": "^2.18.0",
+    "cors": "^2.8.6",
     "crypto": "npm:bare-node-crypto",
+    "express": "^5.2.1",
     "fs": "npm:bare-node-fs",
     "path": "npm:bare-node-path",
     "protomux": "^3.10.1",
@@ -29,5 +31,20 @@
   },
   "overrides": {
     "trac-wallet": "1.0.1"
-  }
+  },
+  "description": "This repo is a fork of upstream **Intercom** (Trac-Systems/intercom): a reference implementation of the Intercom stack on Trac Network for an internet of agents.",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Restianrony34/intercom-swap.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Restianrony34/intercom-swap/issues"
+  },
+  "homepage": "https://github.com/Restianrony34/intercom-swap#readme"
 }
