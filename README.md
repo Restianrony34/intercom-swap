@@ -2,11 +2,11 @@
 
 ## 📸 Preview
 
-![INTERCOM Preview](./assets/swaptest1.PNG)
+![INTERCOM Preview](./assets/SWAPTEST1.PNG)
 
-![INTERCOM Preview](./assets/swaptest2.PNG)
+![INTERCOM Preview](./assets/SWAPTEST2.PNG)
 
-![INTERCOM Preview](./assets/swaptest3.PNG)
+![INTERCOM Preview](./assets/SWAPTEST3.PNG)
 
 
 **MY TRAC ADDRESS WALLET :**  
